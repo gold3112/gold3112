@@ -1,0 +1,43 @@
+name: Generate Stats Cards
+
+on:
+  schedule:
+    - cron: "0 0 * * *"  # 毎日午前0時 (UTC)
+  push:
+    branches:
+      - main
+  workflow_dispatch:  # 手動実行可能
+
+jobs:
+  stats:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Generate stats card
+        uses: stats-organization/github-readme-stats-action@v1
+        with:
+          card: stats
+          options: username=gold3112&show_icons=true&theme=onedark
+          path: profile/stats.svg
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Generate top languages card
+        uses: stats-organization/github-readme-stats-action@v1
+        with:
+          card: top-langs
+          options: username=gold3112&layout=compact&langs_count=6&theme=onedark
+          path: profile/top-langs.svg
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Commit and push changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add profile/*.svg
+          git commit -m "Update README stats cards" || exit 0
+          git push
