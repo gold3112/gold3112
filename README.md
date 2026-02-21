@@ -1,6 +1,6 @@
 # gold3112
 
-Welcome to my GitHub profile! 👋
+わしです
 
 ## 📊 GitHub Statistics
 
